@@ -309,7 +309,7 @@ namespace RxMethodChainStudy
             });
         }
 
-        public static IObservable<TResult> MySelect<T,TResult>(this IObservable<T> source, Func<T, TResult> translate)
+        public static IObservable<TResult> MySelect<T,TResult>(this IObservable<T> source, Func<T, TResult> selector)
         {
             //Observableは値を送信する側なので、変換された値を送信するためTResult型
             return new SelectObservable<TResult>(observer =>
@@ -320,7 +320,7 @@ namespace RxMethodChainStudy
                         value =>
                         {
                             //--- ここはOnNext実行時に呼び出される
-                            observer.OnNext(translate(value));
+                            observer.OnNext(selector(value));
                         },
                         observer.OnError,       //--- OnErrorと
                         observer.OnCompleted)); //--- OnCompletedは何もせず素通し
@@ -337,7 +337,7 @@ namespace RxMethodChainStudy
 
             //filterを挟んでSubscribeしてみる
             var stream = subject
-                .MyWhere(x => x == "Enemy")
+                .MyWhere(x => x.Contains("hoge"))
                 .MySelect(x => x.Length);
 
             stream.Subscribe(new EndPointObserver<int>(
@@ -348,9 +348,10 @@ namespace RxMethodChainStudy
 
             //イベントメッセージ発行
             //プレイヤが触れたオブジェクトのTagが発行されている、みたいな想定
-            subject.OnNext("Wall1");
-            subject.OnNext("Enemy");
-            subject.OnNext("Enemy");
+            subject.OnNext("huga");
+            subject.OnNext("hoge");
+            subject.OnNext("hogefuga");
+
             Console.ReadLine();
         }
     }
