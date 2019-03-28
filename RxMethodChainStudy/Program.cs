@@ -294,13 +294,11 @@ namespace RxMethodChainStudy
         {
             return new WhereObservable<T>(observer =>
             {
-                //--- sourceからの発信をAnonymousObserver<T>で受ける
                 return source.Subscribe(
                     new WhereObserver<T>(
                         value =>
                         {
                             //--- ここはOnNext実行時に呼び出される
-                            //--- ここでobserverへの送信前に処理を差し込むことができる
                             if (predicate(value))
                             {
                                 observer.OnNext(value);
@@ -313,15 +311,15 @@ namespace RxMethodChainStudy
 
         public static IObservable<TResult> MySelect<T,TResult>(this IObservable<T> source, Func<T, TResult> translate)
         {
-            //subscribeされたときに呼び出される実装。
+            //Observableは値を送信する側なので、変換された値を送信するためTResult型
             return new SelectObservable<TResult>(observer =>
             {
                 return source.Subscribe(
+                    //Observerは上からOnNextされた値を受け取るのでT型
                     new SelectObserver<T>(
                         value =>
                         {
                             //--- ここはOnNext実行時に呼び出される
-                            //--- ここでobserverへの送信前に処理を差し込むことができる
                             observer.OnNext(translate(value));
                         },
                         observer.OnError,       //--- OnErrorと
