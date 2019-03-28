@@ -1,12 +1,359 @@
 ﻿using System;
+using System.Reactive.Subjects;
 
 namespace RxMethodChainStudy
 {
+    /// <summary>
+    /// 情報の受信者としての機能を提供します。
+    /// </summary>
+    /// <typeparam name="T">受信するデータの型</typeparam>
+    class EndPointObserver<T> : IObserver<T>
+    {
+        private readonly Action onCompleted = null;
+        private readonly Action<Exception> onError = null;
+        private readonly Action<T> onNext = null;
+
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="onNext">OnNextのときに呼び出されるデリゲート</param>
+        /// <param name="onError">OnErrorのときに呼び出されるデリゲート</param>
+        /// <param name="onCompleted">OnCompletedのときに呼び出されるデリゲート</param>
+        public EndPointObserver(Action<T> onNext, Action<Exception> onError, Action onCompleted)
+        {
+            this.onNext = onNext ?? throw new ArgumentNullException("onNext");
+            this.onError = onError ?? throw new ArgumentNullException("onError");
+            this.onCompleted = onCompleted ?? throw new ArgumentNullException("onCompleted");
+        }
+
+        /// <summary>
+        /// プロバイダーがプッシュベースの通知の送信を完了したことをオブザーバーに通知します。
+        /// </summary>
+        public void OnCompleted()
+        {
+            this.onCompleted();
+        }
+
+        /// <summary>
+        /// プロバイダーでエラー状態が発生したことをオブザーバーに通知します。
+        /// </summary>
+        /// <param name="error">エラーに関する追加情報を提供するオブジェクト</param>
+        public void OnError(Exception error)
+        {
+            this.onError(error);
+        }
+
+        /// <summary>
+        /// オブザーバーに新しいデータを提供します。
+        /// </summary>
+        /// <param name="value">現在の通知情報</param>
+        public void OnNext(T value)
+        {
+            this.onNext(value);
+        }
+    }
+
+
+    /// <summary>
+    /// 情報の受信者としての機能を提供します。
+    /// </summary>
+    /// <typeparam name="T">受信するデータの型</typeparam>
+    class AnonymousObserver<T> : IObserver<T>
+    {
+        private readonly Action onCompleted = null;
+        private readonly Action<Exception> onError = null;
+        private readonly Action<T> onNext = null;
+
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="onNext">OnNextのときに呼び出されるデリゲート</param>
+        /// <param name="onError">OnErrorのときに呼び出されるデリゲート</param>
+        /// <param name="onCompleted">OnCompletedのときに呼び出されるデリゲート</param>
+        public AnonymousObserver(Action<T> onNext, Action<Exception> onError, Action onCompleted)
+        {
+            this.onNext = onNext ?? throw new ArgumentNullException("onNext");
+            this.onError = onError ?? throw new ArgumentNullException("onError");
+            this.onCompleted = onCompleted ?? throw new ArgumentNullException("onCompleted");
+        }
+
+        /// <summary>
+        /// プロバイダーがプッシュベースの通知の送信を完了したことをオブザーバーに通知します。
+        /// </summary>
+        public void OnCompleted()
+        {
+            this.onCompleted();
+        }
+
+        /// <summary>
+        /// プロバイダーでエラー状態が発生したことをオブザーバーに通知します。
+        /// </summary>
+        /// <param name="error">エラーに関する追加情報を提供するオブジェクト</param>
+        public void OnError(Exception error)
+        {
+            this.onError(error);
+        }
+
+        /// <summary>
+        /// オブザーバーに新しいデータを提供します。
+        /// </summary>
+        /// <param name="value">現在の通知情報</param>
+        public void OnNext(T value)
+        {
+            this.onNext(value);
+        }
+    }
+
+    /// <summary>
+    /// 情報の受信者としての機能を提供します。
+    /// </summary>
+    /// <typeparam name="T">受信するデータの型</typeparam>
+    class SelectObserver<T> : IObserver<T>
+    {
+        private readonly Action onCompleted = null;
+        private readonly Action<Exception> onError = null;
+        private readonly Action<T> onNext = null;
+
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="onNext">OnNextのときに呼び出されるデリゲート</param>
+        /// <param name="onError">OnErrorのときに呼び出されるデリゲート</param>
+        /// <param name="onCompleted">OnCompletedのときに呼び出されるデリゲート</param>
+        public SelectObserver(Action<T> onNext, Action<Exception> onError, Action onCompleted)
+        {
+            this.onNext = onNext ?? throw new ArgumentNullException("onNext");
+            this.onError = onError ?? throw new ArgumentNullException("onError");
+            this.onCompleted = onCompleted ?? throw new ArgumentNullException("onCompleted");
+        }
+
+        /// <summary>
+        /// プロバイダーがプッシュベースの通知の送信を完了したことをオブザーバーに通知します。
+        /// </summary>
+        public void OnCompleted()
+        {
+            this.onCompleted();
+        }
+
+        /// <summary>
+        /// プロバイダーでエラー状態が発生したことをオブザーバーに通知します。
+        /// </summary>
+        /// <param name="error">エラーに関する追加情報を提供するオブジェクト</param>
+        public void OnError(Exception error)
+        {
+            this.onError(error);
+        }
+
+        /// <summary>
+        /// オブザーバーに新しいデータを提供します。
+        /// </summary>
+        /// <param name="value">現在の通知情報</param>
+        public void OnNext(T value)
+        {
+            this.onNext(value);
+        }
+    }
+
+    /// <summary>
+    /// 情報の受信者としての機能を提供します。
+    /// </summary>
+    /// <typeparam name="T">受信するデータの型</typeparam>
+    class WhereObserver<T> : IObserver<T>
+    {
+        private readonly Action onCompleted = null;
+        private readonly Action<Exception> onError = null;
+        private readonly Action<T> onNext = null;
+
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="onNext">OnNextのときに呼び出されるデリゲート</param>
+        /// <param name="onError">OnErrorのときに呼び出されるデリゲート</param>
+        /// <param name="onCompleted">OnCompletedのときに呼び出されるデリゲート</param>
+        public WhereObserver(Action<T> onNext, Action<Exception> onError, Action onCompleted)
+        {
+            this.onNext = onNext ?? throw new ArgumentNullException("onNext");
+            this.onError = onError ?? throw new ArgumentNullException("onError");
+            this.onCompleted = onCompleted ?? throw new ArgumentNullException("onCompleted");
+        }
+
+        /// <summary>
+        /// プロバイダーがプッシュベースの通知の送信を完了したことをオブザーバーに通知します。
+        /// </summary>
+        public void OnCompleted()
+        {
+            this.onCompleted();
+        }
+
+        /// <summary>
+        /// プロバイダーでエラー状態が発生したことをオブザーバーに通知します。
+        /// </summary>
+        /// <param name="error">エラーに関する追加情報を提供するオブジェクト</param>
+        public void OnError(Exception error)
+        {
+            this.onError(error);
+        }
+
+        /// <summary>
+        /// オブザーバーに新しいデータを提供します。
+        /// </summary>
+        /// <param name="value">現在の通知情報</param>
+        public void OnNext(T value)
+        {
+            this.onNext(value);
+        }
+    }
+
+    /// <summary>
+    /// 情報通知のプロバイダーとしての機能を提供します。
+    /// </summary>
+    /// <typeparam name="T">受信するデータの型</typeparam>
+    class AnonymousObservable<T> : IObservable<T>
+    {
+        private readonly Func<IObserver<T>, IDisposable> subscribe = null;
+
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="subscribe">Subscribeのときに呼び出されるデリゲート</param>
+        public AnonymousObservable(Func<IObserver<T>, IDisposable> subscribe)
+        {
+            this.subscribe = subscribe ?? throw new ArgumentNullException("subscribe");
+        }
+
+        /// <summary>
+        /// オブザーバーが通知を受け取ることをプロバイダーに通知します。
+        /// </summary>
+        /// <param name="observer">通知を受け取るオブジェクト</param>
+        /// <returns>プロバイダーが通知の送信を完了する前に、オブザーバーが通知の受信を停止できるインターフェイスへの参照</returns>
+        public IDisposable Subscribe(IObserver<T> observer)
+        {
+            return this.subscribe(observer);
+        }
+    }
+
+    /// <summary>
+    /// 情報通知のプロバイダーとしての機能を提供します。
+    /// </summary>
+    /// <typeparam name="T">受信するデータの型</typeparam>
+    class WhereObservable<T> : IObservable<T>
+    {
+        private readonly Func<IObserver<T>, IDisposable> subscribe = null;
+
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="subscribe">Subscribeのときに呼び出されるデリゲート</param>
+        public WhereObservable(Func<IObserver<T>, IDisposable> subscribe)
+        {
+            this.subscribe = subscribe ?? throw new ArgumentNullException("subscribe");
+        }
+
+        /// <summary>
+        /// オブザーバーが通知を受け取ることをプロバイダーに通知します。
+        /// </summary>
+        /// <param name="observer">通知を受け取るオブジェクト</param>
+        /// <returns>プロバイダーが通知の送信を完了する前に、オブザーバーが通知の受信を停止できるインターフェイスへの参照</returns>
+        public IDisposable Subscribe(IObserver<T> observer)
+        {
+            return this.subscribe(observer);
+        }
+    }
+
+    /// <summary>
+    /// 情報通知のプロバイダーとしての機能を提供します。
+    /// </summary>
+    /// <typeparam name="T">受信するデータの型</typeparam>
+    class SelectObservable<T> : IObservable<T>
+    {
+        private readonly Func<IObserver<T>, IDisposable> subscribe = null;
+
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="subscribe">Subscribeのときに呼び出されるデリゲート</param>
+        public SelectObservable(Func<IObserver<T>, IDisposable> subscribe)
+        {
+            this.subscribe = subscribe ?? throw new ArgumentNullException("subscribe");
+        }
+
+        /// <summary>
+        /// オブザーバーが通知を受け取ることをプロバイダーに通知します。
+        /// </summary>
+        /// <param name="observer">通知を受け取るオブジェクト</param>
+        /// <returns>プロバイダーが通知の送信を完了する前に、オブザーバーが通知の受信を停止できるインターフェイスへの参照</returns>
+        public IDisposable Subscribe(IObserver<T> observer)
+        {
+            return this.subscribe(observer);
+        }
+    }
+
+    public static class Extension
+    {
+        public static IObservable<T> MyWhere<T>(this IObservable<T> source, Func<T, bool> predicate)
+        {
+            return new WhereObservable<T>(observer =>
+            {
+                //--- sourceからの発信をAnonymousObserver<T>で受ける
+                return source.Subscribe(
+                    new WhereObserver<T>(
+                        value =>
+                        {
+                            //--- ここはOnNext実行時に呼び出される
+                            //--- ここでobserverへの送信前に処理を差し込むことができる
+                            if (predicate(value))
+                            {
+                                observer.OnNext(value);
+                            }
+                        },
+                        observer.OnError,       //--- OnErrorと
+                        observer.OnCompleted)); //--- OnCompletedは何もせず素通し
+            });
+        }
+
+        public static IObservable<TResult> MySelect<T,TResult>(this IObservable<T> source, Func<T, TResult> translate)
+        {
+            //subscribeされたときに呼び出される実装。
+            return new SelectObservable<TResult>(observer =>
+            {
+                return source.Subscribe(
+                    new SelectObserver<T>(
+                        value =>
+                        {
+                            //--- ここはOnNext実行時に呼び出される
+                            //--- ここでobserverへの送信前に処理を差し込むことができる
+                            observer.OnNext(translate(value));
+                        },
+                        observer.OnError,       //--- OnErrorと
+                        observer.OnCompleted)); //--- OnCompletedは何もせず素通し
+            });
+        }
+    }
     class Program
     {
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
+            //文字列を発行するSubject
+            Subject<string> subject = new Subject<string>();
+
+            //filterを挟んでSubscribeしてみる
+            var stream = subject
+                .MyWhere(x => x == "Enemy")
+                .MySelect(x => x.Length);
+
+            stream.Subscribe(new EndPointObserver<int>(
+                x => Console.WriteLine(x),
+                e => Console.WriteLine(e.Message),
+                () => Console.WriteLine("complted")));
+
+
+            //イベントメッセージ発行
+            //プレイヤが触れたオブジェクトのTagが発行されている、みたいな想定
+            subject.OnNext("Wall1");
+            subject.OnNext("Enemy");
+            subject.OnNext("Enemy");
+            Console.ReadLine();
         }
     }
 }
